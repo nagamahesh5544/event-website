@@ -180,7 +180,7 @@ function SiteLayout({ children }) {
       <header className="site-header">
         <Link to="/" className="brand">
           <img src={companyLogo} alt="The Event Alchemist logo" />
-          <span>The Event Alchemist</span>
+          <span>The Event Alchemyist</span>
         </Link>
         <nav className="main-nav">
           <NavLink to="/">Home</NavLink>
