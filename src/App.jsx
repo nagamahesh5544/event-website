@@ -274,7 +274,7 @@ function HomePage() {
         <SectionTitle eyebrow="Statistics" title="Trust Builders" />
         <div className="stats">
           <article><h3>12+</h3><p>Years of Experience</p></article>
-          <article><h3>200+</h3><p>Events Executed</p></article>
+          <article><h3>750</h3><p>Events Executed</p></article>
           <article><h3>Pan-India</h3><p>Presence</p></article>
         </div>
       </section>
@@ -502,6 +502,7 @@ function ContactPage() {
         </form>
         <div className="contact-info">
           <p><strong>Contact us:</strong> +91 9220766770</p>
+          <p><strong>Email:</strong> Theeventalchemyist@gmail.com</p>
           <p><strong>WhatsApp:</strong> <a href="https://wa.me/919220766770" target="_blank" rel="noreferrer">9220766770</a></p>
           <p><strong>Instagram:</strong> <a href="https://www.instagram.com/the_event_alchemist?igsh=OG5tOGQwaGEydW9y" target="_blank" rel="noreferrer">@the_event_alchemist</a></p>
         </div>
