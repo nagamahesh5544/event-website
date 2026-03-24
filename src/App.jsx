@@ -1,7 +1,17 @@
+import { useRef } from 'react'
 import { BrowserRouter, Link, NavLink, Route, Routes, useParams } from 'react-router-dom'
 
 const heroImage = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1400&q=80'
 const aboutImage = 'https://images.unsplash.com/photo-1503428593586-e225b39bddfe?auto=format&fit=crop&w=1200&q=80'
+const companyLogo = '/company-logo.png'
+
+const instagramPosts = [
+  'https://www.instagram.com/reels/DUZruu9CTJM/',
+  'https://www.instagram.com/reels/DR59LCwiQzn/',
+  'https://www.instagram.com/reels/DRkW6jcE2xh/',
+  'https://www.instagram.com/reels/DIzFTBkpnDA/',
+  'https://www.instagram.com/reels/DHJGiVupg8V/',
+]
 
 const eventTypes = [
   { slug: 'corporate-experiences', title: 'Corporate Experiences', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=80' },
@@ -88,11 +98,30 @@ function SectionTitle({ eyebrow, title, body }) {
   )
 }
 
+function Breadcrumbs({ items }) {
+  return (
+    <nav className="breadcrumbs" aria-label="Breadcrumb">
+      {items.map((item, index) => {
+        const isLast = index === items.length - 1
+        return (
+          <span key={item.label} className="breadcrumb-item">
+            {isLast ? <span aria-current="page">{item.label}</span> : <Link to={item.to}>{item.label}</Link>}
+            {!isLast && <span className="breadcrumb-sep">/</span>}
+          </span>
+        )
+      })}
+    </nav>
+  )
+}
+
 function SiteLayout({ children }) {
   return (
     <>
       <header className="site-header">
-        <Link to="/" className="brand">Yours Eventfully</Link>
+        <Link to="/" className="brand">
+          <img src={companyLogo} alt="The Event Alchemist logo" />
+          <span>The Event Alchemist</span>
+        </Link>
         <nav className="main-nav">
           <NavLink to="/">Home</NavLink>
           <NavLink to="/about">About Us</NavLink>
@@ -115,6 +144,16 @@ function SiteLayout({ children }) {
 }
 
 function HomePage() {
+  const reelsRef = useRef(null)
+
+  const scrollReels = (direction) => {
+    if (!reelsRef.current) return
+    reelsRef.current.scrollBy({
+      left: direction * 380,
+      behavior: 'smooth',
+    })
+  }
+
   return (
     <SiteLayout>
       <section className="hero" style={{ backgroundImage: `linear-gradient(rgba(36, 26, 16, 0.74), rgba(36, 26, 16, 0.74)), url(${heroImage})` }}>
@@ -165,6 +204,34 @@ function HomePage() {
               <span>{item.title}</span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="panel">
+        <SectionTitle eyebrow="Recent Events" title="Instagram Reels & Highlights" body="Real events delivered by our team. Click any card to watch on Instagram." />
+        <div className="insta-controls">
+          <button type="button" className="carousel-btn" onClick={() => scrollReels(-1)}>Prev</button>
+          <button type="button" className="carousel-btn" onClick={() => scrollReels(1)}>Next</button>
+        </div>
+        <div className="insta-grid" ref={reelsRef}>
+          {instagramPosts.map((url) => {
+            const normalizedUrl = url.replace('/reels/', '/reel/')
+            const embedUrl = normalizedUrl.endsWith('/')
+              ? `${normalizedUrl}embed`
+              : `${normalizedUrl}/embed`
+            return (
+              <article className="insta-card" key={url}>
+                <iframe
+                  src={embedUrl}
+                  title={`Instagram post ${url}`}
+                  loading="lazy"
+                  allowTransparency
+                  scrolling="no"
+                ></iframe>
+                <a className="text-link" href={url} target="_blank" rel="noreferrer">Open on Instagram</a>
+              </article>
+            )
+          })}
         </div>
       </section>
     </SiteLayout>
@@ -259,6 +326,13 @@ function OfferDetailPage() {
   return (
     <SiteLayout>
       <section className="panel">
+        <Breadcrumbs
+          items={[
+            { label: 'Home', to: '/' },
+            { label: 'Our Offerings', to: '/offerings' },
+            { label: service.title },
+          ]}
+        />
         <SectionTitle eyebrow="Service Detail" title={service.title} />
         <img className="detail-image" src={service.image} alt={service.title} />
         <ul className="detail-list">{service.points.map((point) => <li key={point}>{point}</li>)}</ul>
@@ -275,6 +349,13 @@ function TalentDetailPage() {
   return (
     <SiteLayout>
       <section className="panel">
+        <Breadcrumbs
+          items={[
+            { label: 'Home', to: '/' },
+            { label: 'Talent Portfolio', to: '/talent' },
+            { label: talent.title },
+          ]}
+        />
         <SectionTitle eyebrow="Talent Category" title={talent.title} />
         <img className="detail-image" src={talent.image} alt={talent.title} />
         <ul className="detail-list">{talent.points.map((point) => <li key={point}>{point}</li>)}</ul>
@@ -291,6 +372,13 @@ function EventTypeDetailPage() {
   return (
     <SiteLayout>
       <section className="panel">
+        <Breadcrumbs
+          items={[
+            { label: 'Home', to: '/' },
+            { label: 'Event Types', to: '/' },
+            { label: event.title },
+          ]}
+        />
         <SectionTitle eyebrow="Event Type" title={event.title} />
         <p className="subtext">
           This format is delivered end-to-end with creative direction, artist selection, technical production,

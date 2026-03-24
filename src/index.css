@@ -43,9 +43,20 @@ a {
 }
 
 .brand {
-  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--brown);
+}
+
+.brand img {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  object-fit: cover;
 }
 
 .main-nav {
@@ -134,6 +145,31 @@ main {
   color: var(--charcoal);
 }
 
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.65rem;
+  color: #776757;
+  font-size: 0.92rem;
+}
+
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.breadcrumb-item a {
+  color: var(--brown);
+  font-weight: 600;
+}
+
+.breadcrumb-sep {
+  color: #9b8c7d;
+}
+
 .subtext {
   color: #665648;
   max-width: 70ch;
@@ -178,6 +214,64 @@ main {
 
 .event-grid {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.insta-grid {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 0.8rem;
+  padding-bottom: 0.4rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.insta-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.insta-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin: 0.4rem 0 0.9rem;
+}
+
+.carousel-btn {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--brown);
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.carousel-btn:hover {
+  background: #f8f1e5;
+}
+
+.insta-card {
+  flex: 0 0 360px;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  background: #fff;
+  padding: 0.6rem;
+  scroll-snap-align: start;
+}
+
+.insta-card iframe {
+  width: 100%;
+  height: 650px;
+  border: 0;
+  border-radius: 0.55rem;
+  background: #f1eee8;
+  overflow: hidden;
 }
 
 .image-card {
@@ -339,6 +433,18 @@ main {
   .list-card-image {
     height: 210px;
     margin-bottom: 0.8rem;
+  }
+
+  .insta-card {
+    flex-basis: 300px;
+  }
+
+  .insta-card iframe {
+    height: 580px;
+  }
+
+  .insta-controls {
+    justify-content: flex-start;
   }
 }
 
