@@ -14,6 +14,7 @@ const offerings = [
   {
     slug: 'event-production-management',
     title: 'Event Production & Management',
+    image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80',
     points: [
       'Corporate Events & Conferences',
       'Weddings & Social Celebrations',
@@ -26,21 +27,25 @@ const offerings = [
   {
     slug: 'professional-sound-engineering',
     title: 'Professional Sound Engineering',
+    image: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1200&q=80',
     points: ['Stage & Truss Design Systems', 'Architectural & Ambient Lighting', 'LED Walls & Visual Displays', 'Audio-Visual Integration'],
   },
   {
     slug: 'licensing-compliance-support',
     title: 'Licensing & Compliance Support',
+    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80',
     points: ['Event Licensing Consultation', 'Legal & Regulatory Coordination', 'On-ground Compliance Support'],
   },
   {
     slug: 'experiential-engagement-solutions',
     title: 'Experiential & Engagement Solutions',
+    image: 'https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=1200&q=80',
     points: ['Interactive Experience Zones', 'Curated game booths & activity setups', 'Interactive guest experiences'],
   },
   {
     slug: 'corporate-engagement-team-building',
     title: 'Corporate Engagement & Team Building',
+    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80',
     points: ['Structured Team-Building Programs', 'Leadership & Collaboration Workshops', 'Other Corporate Activities'],
   },
 ]
@@ -49,6 +54,7 @@ const talentCategories = [
   {
     slug: 'musical-talent',
     title: 'Musical Talent',
+    image: 'https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?auto=format&fit=crop&w=1200&q=80',
     points: [
       'Sufi & Classical Fusion Artists',
       'Bollywood Playback & Live Performers',
@@ -61,11 +67,13 @@ const talentCategories = [
   {
     slug: 'contemporary-performance-artists',
     title: 'Contemporary & Performance Artists',
+    image: 'https://images.unsplash.com/photo-1527224857830-43a7acc85260?auto=format&fit=crop&w=1200&q=80',
     points: ['Stand-up Comedians', 'Illusionists & Mentalists', 'DJ-led Live Bands & Electronic Acts', 'Motivational & Keynote Speakers'],
   },
   {
     slug: 'specialty-visual-acts',
     title: 'Specialty & Visual Acts',
+    image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80',
     points: ['Aerial Performance Artists', 'Fire Performance Acts', 'LED & Laser Visual Shows'],
   },
 ]
@@ -207,9 +215,12 @@ function OfferingsPage() {
         <div className="stack">
           {offerings.map((item) => (
             <article className="list-card" key={item.slug}>
-              <h3>{item.title}</h3>
-              <ul>{item.points.map((point) => <li key={point}>{point}</li>)}</ul>
-              <Link className="text-link" to={`/offerings/${item.slug}`}>View Details</Link>
+              <img className="list-card-image" src={item.image} alt={item.title} />
+              <div className="list-card-content">
+                <h3>{item.title}</h3>
+                <ul>{item.points.map((point) => <li key={point}>{point}</li>)}</ul>
+                <Link className="text-link" to={`/offerings/${item.slug}`}>View Details</Link>
+              </div>
             </article>
           ))}
         </div>
@@ -226,9 +237,12 @@ function TalentPage() {
         <div className="stack">
           {talentCategories.map((item) => (
             <article className="list-card" key={item.slug}>
-              <h3>{item.title}</h3>
-              <ul>{item.points.map((point) => <li key={point}>{point}</li>)}</ul>
-              <Link className="text-link" to={`/talent/${item.slug}`}>Explore Category</Link>
+              <img className="list-card-image" src={item.image} alt={item.title} />
+              <div className="list-card-content">
+                <h3>{item.title}</h3>
+                <ul>{item.points.map((point) => <li key={point}>{point}</li>)}</ul>
+                <Link className="text-link" to={`/talent/${item.slug}`}>Explore Category</Link>
+              </div>
             </article>
           ))}
         </div>
@@ -246,6 +260,7 @@ function OfferDetailPage() {
     <SiteLayout>
       <section className="panel">
         <SectionTitle eyebrow="Service Detail" title={service.title} />
+        <img className="detail-image" src={service.image} alt={service.title} />
         <ul className="detail-list">{service.points.map((point) => <li key={point}>{point}</li>)}</ul>
       </section>
     </SiteLayout>
@@ -261,6 +276,7 @@ function TalentDetailPage() {
     <SiteLayout>
       <section className="panel">
         <SectionTitle eyebrow="Talent Category" title={talent.title} />
+        <img className="detail-image" src={talent.image} alt={talent.title} />
         <ul className="detail-list">{talent.points.map((point) => <li key={point}>{point}</li>)}</ul>
       </section>
     </SiteLayout>
@@ -302,7 +318,7 @@ function ContactPage() {
         <div className="contact-info">
           <p><strong>Contact us:</strong> +91 9220766770</p>
           <p><strong>WhatsApp:</strong> <a href="https://wa.me/919220766770" target="_blank" rel="noreferrer">9220766770</a></p>
-          <p><strong>Instagram:</strong> <a href="https://instagram.com/yourseventfully" target="_blank" rel="noreferrer">@yourseventfully</a></p>
+          <p><strong>Instagram:</strong> <a href="https://www.instagram.com/the_event_alchemist?igsh=OG5tOGQwaGEydW9y" target="_blank" rel="noreferrer">@the_event_alchemist</a></p>
         </div>
       </section>
     </SiteLayout>
