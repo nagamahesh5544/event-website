@@ -21,10 +21,42 @@ const instagramPosts = [
 ]
 
 const eventTypes = [
-  { slug: 'corporate-experiences', title: 'Corporate Experiences', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=80' },
-  { slug: 'wedding-celebrations', title: 'Wedding Celebrations', image: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80' },
-  { slug: 'concerts-live-shows', title: 'Concerts & Live Shows', image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80' },
-  { slug: 'spiritual-cultural-gatherings', title: 'Spiritual & Cultural Gatherings', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=80' },
+  {
+    slug: 'corporate-experiences',
+    title: 'Corporate Experiences',
+    image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=80',
+    description: [
+      'Talent-led solutions for corporate events, including artists, motivational speakers, and technical production.',
+      'We enhance your event with seamless sound and performance support.',
+    ],
+  },
+  {
+    slug: 'wedding-celebrations',
+    title: 'Wedding Celebrations',
+    image: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80',
+    description: [
+      'Curated artists and live music to elevate wedding celebrations.',
+      'Supported by refined sound and lighting for a complete experience.',
+    ],
+  },
+  {
+    slug: 'concerts-live-shows',
+    title: 'Concerts & Live Shows',
+    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80',
+    description: [
+      'End-to-end performance support for concerts and live shows.',
+      'From artist sourcing to sound engineering and stage production.',
+    ],
+  },
+  {
+    slug: 'spiritual-cultural-gatherings',
+    title: 'Spiritual & Cultural Gatherings',
+    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=80',
+    description: [
+      'Thoughtfully curated spiritual artists and cultural performances.',
+      'Enhanced with ambient sound, lighting, and minimal stage setups.',
+    ],
+  },
 ]
 
 const offerings = [
@@ -45,7 +77,6 @@ const offerings = [
     title: 'Artist Curation & Management',
     image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1200&q=80',
     points: [
-      ' Musical Talent',
       ' Sufi & Classical Fusion Artists',
       ' Bollywood Playback & Live Performers',
       ' International & English Rock Bands',
@@ -232,8 +263,8 @@ function HomePage() {
       <section className="panel">
         <SectionTitle eyebrow="What We Do" title="Our Expertise" />
         <div className="grid four">
-          <Link to="/offerings/event-production-management" className="card">Event Production</Link>
-          <Link to="/offerings/artist-curation-management" className="card">Artist Curation</Link>
+          <Link to="/offerings/event-production-management" className="card">Event Production & Management</Link>
+          <Link to="/offerings/artist-curation-management" className="card">Artist Curation & Management</Link>
           <Link to="/offerings/professional-sound-engineering" className="card">Technical & Sound Engineering</Link>
           <Link to="/offerings/licensing-compliance-support" className="card">Licensing & Compliance</Link>
         </div>
@@ -445,10 +476,11 @@ function EventTypeDetailPage() {
           ]}
         />
         <SectionTitle eyebrow="Event Type" title={event.title} />
-        <p className="subtext">
-          This format is delivered end-to-end with creative direction, artist selection, technical production,
-          and compliance support tailored to your venue and audience.
-        </p>
+        <div className="detail-copy">
+          {event.description.map((line) => (
+            <p className="subtext" key={line}>{line}</p>
+          ))}
+        </div>
       </section>
     </SiteLayout>
   )
