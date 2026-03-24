@@ -1,9 +1,16 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BrowserRouter, Link, NavLink, Route, Routes, useParams } from 'react-router-dom'
 
 const heroImage = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1400&q=80'
 const aboutImage = 'https://images.unsplash.com/photo-1503428593586-e225b39bddfe?auto=format&fit=crop&w=1200&q=80'
 const companyLogo = '/company-logo.png'
+const clientLogos = [
+  '/client-logos/client-1.jpeg',
+  '/client-logos/client-2.jpeg',
+  '/client-logos/client-3.jpeg',
+  '/client-logos/client-4.jpeg',
+  '/client-logos/client-5.jpeg',
+]
 
 const instagramPosts = [
   'https://www.instagram.com/reels/DUZruu9CTJM/',
@@ -31,7 +38,29 @@ const offerings = [
       'Club & Nightlife Programming',
       'Concerts & Live Entertainment Shows',
       'Spiritual & Cultural Gatherings',
-      'Artist Curation and management',
+    ],
+  },
+  {
+    slug: 'artist-curation-management',
+    title: 'Artist Curation & Management',
+    image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1200&q=80',
+    points: [
+      ' Musical Talent',
+      ' Sufi & Classical Fusion Artists',
+      ' Bollywood Playback & Live Performers',
+      ' International & English Rock Bands',
+      ' Instrumental Ensembles & Live Music Setups',
+      ' Musical Fera',
+      ' Spiritual & Meditative Music Artists',
+      ' Contemporary & Performance Artists',
+      ' Stand-up Comedians',
+      ' Illusionists & Mentalists',
+      ' DJ-led Live Bands & Electronic Acts',
+      ' Motivational & Keynote Speakers',
+      ' Specialty & Visual Acts',
+      ' Aerial Performance Artists',
+      ' Fire Performance Acts',
+      ' LED & Laser Visual Shows',
     ],
   },
   {
@@ -145,6 +174,27 @@ function SiteLayout({ children }) {
 
 function HomePage() {
   const reelsRef = useRef(null)
+  const instaSectionRef = useRef(null)
+  const [showInsta, setShowInsta] = useState(false)
+
+  useEffect(() => {
+    if (!instaSectionRef.current) return
+
+    const el = instaSectionRef.current
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        if (entry?.isIntersecting) {
+          setShowInsta(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.15 }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   const scrollReels = (direction) => {
     if (!reelsRef.current) return
@@ -156,7 +206,10 @@ function HomePage() {
 
   return (
     <SiteLayout>
-      <section className="hero" style={{ backgroundImage: `linear-gradient(rgba(36, 26, 16, 0.74), rgba(36, 26, 16, 0.74)), url(${heroImage})` }}>
+      <section
+        className="hero"
+        style={{ backgroundImage: 'linear-gradient(rgba(36, 26, 16, 0.74), rgba(36, 26, 16, 0.74))' }}
+      >
         <p className="eyebrow">Distinguished Event & Entertainment Experiences</p>
         <h1>TurningEvents into Golden Moments.</h1>
         <p>
@@ -177,10 +230,10 @@ function HomePage() {
       </section>
 
       <section className="panel">
-        <SectionTitle eyebrow="What We Do" title="Preview Blocks" />
+        <SectionTitle eyebrow="What We Do" title="Our Expertise" />
         <div className="grid four">
           <Link to="/offerings/event-production-management" className="card">Event Production</Link>
-          <Link to="/offerings/event-production-management" className="card">Artist Curation</Link>
+          <Link to="/offerings/artist-curation-management" className="card">Artist Curation</Link>
           <Link to="/offerings/professional-sound-engineering" className="card">Technical & Sound Engineering</Link>
           <Link to="/offerings/licensing-compliance-support" className="card">Licensing & Compliance</Link>
         </div>
@@ -196,6 +249,17 @@ function HomePage() {
       </section>
 
       <section className="panel">
+        <SectionTitle eyebrow="Our Clients" title="Trusted Partnership Across Brands" body="We are proud to have partnered with these clients for memorable event experiences." />
+        <div className="clients-grid">
+          {clientLogos.map((logo, index) => (
+            <article className="client-logo-card" key={logo}>
+              <img src={logo} alt={`Client logo ${index + 1}`} />
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="panel">
         <SectionTitle eyebrow="Featured Event Types" title="Click each card to explore" />
         <div className="grid event-grid">
           {eventTypes.map((item) => (
@@ -207,7 +271,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="panel">
+      <section className="panel" ref={instaSectionRef}>
         <SectionTitle eyebrow="Recent Events" title="Instagram Reels & Highlights" body="Real events delivered by our team. Click any card to watch on Instagram." />
         <div className="insta-controls">
           <button type="button" className="carousel-btn" onClick={() => scrollReels(-1)}>Prev</button>
@@ -221,13 +285,16 @@ function HomePage() {
               : `${normalizedUrl}/embed`
             return (
               <article className="insta-card" key={url}>
-                <iframe
-                  src={embedUrl}
-                  title={`Instagram post ${url}`}
-                  loading="lazy"
-                  allowTransparency
-                  scrolling="no"
-                ></iframe>
+                {showInsta ? (
+                  <iframe
+                    src={embedUrl}
+                    title={`Instagram post ${url}`}
+                    loading="lazy"
+                    scrolling="no"
+                  ></iframe>
+                ) : (
+                  <div className="insta-iframe-placeholder" aria-hidden="true" />
+                )}
                 <a className="text-link" href={url} target="_blank" rel="noreferrer">Open on Instagram</a>
               </article>
             )
@@ -279,13 +346,12 @@ function OfferingsPage() {
     <SiteLayout>
       <section className="panel">
         <SectionTitle eyebrow="Our Offerings" title="Comprehensive event services" />
-        <div className="stack">
+        <div className="cards-grid">
           {offerings.map((item) => (
             <article className="list-card" key={item.slug}>
               <img className="list-card-image" src={item.image} alt={item.title} />
               <div className="list-card-content">
                 <h3>{item.title}</h3>
-                <ul>{item.points.map((point) => <li key={point}>{point}</li>)}</ul>
                 <Link className="text-link" to={`/offerings/${item.slug}`}>View Details</Link>
               </div>
             </article>
@@ -301,13 +367,12 @@ function TalentPage() {
     <SiteLayout>
       <section className="panel">
         <SectionTitle eyebrow="Talent Portfolio" title="Curated artists and acts" />
-        <div className="stack">
+        <div className="cards-grid">
           {talentCategories.map((item) => (
             <article className="list-card" key={item.slug}>
               <img className="list-card-image" src={item.image} alt={item.title} />
               <div className="list-card-content">
                 <h3>{item.title}</h3>
-                <ul>{item.points.map((point) => <li key={point}>{point}</li>)}</ul>
                 <Link className="text-link" to={`/talent/${item.slug}`}>Explore Category</Link>
               </div>
             </article>
