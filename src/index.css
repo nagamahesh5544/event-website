@@ -71,6 +71,70 @@ a {
   color: var(--gold);
 }
 
+.menu-toggle {
+  display: none;
+  border: 1px solid var(--line);
+  background: #fffefb;
+  color: var(--brown);
+  border-radius: 0.6rem;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  background: rgba(24, 16, 10, 0.42);
+  z-index: 60;
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(82vw, 320px);
+  height: 100vh;
+  background: #fffaf2;
+  border-left: 1px solid var(--line);
+  box-shadow: -8px 0 28px rgba(0, 0, 0, 0.18);
+  z-index: 70;
+  padding: 1rem;
+}
+
+.drawer-close {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--brown);
+  border-radius: 0.5rem;
+  width: 34px;
+  height: 34px;
+  font-size: 1.3rem;
+  margin-left: auto;
+  display: block;
+  cursor: pointer;
+}
+
+.mobile-nav {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.mobile-nav a {
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  background: var(--card);
+  font-weight: 700;
+}
+
+.mobile-nav a.active {
+  color: var(--gold);
+}
+
 main {
   width: min(1150px, 92%);
   margin: 1.5rem auto 3rem;
@@ -442,6 +506,31 @@ main {
   line-height: 1.8;
 }
 
+.toast {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 50;
+  min-width: 260px;
+  max-width: min(92vw, 420px);
+  padding: 0.8rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--line);
+  background: #fffefb;
+  box-shadow: 0 12px 28px rgba(35, 24, 14, 0.18);
+  font-weight: 600;
+}
+
+.toast.success {
+  border-color: rgba(46, 125, 50, 0.35);
+  color: #1b5e20;
+}
+
+.toast.error {
+  border-color: rgba(211, 47, 47, 0.35);
+  color: #8e1717;
+}
+
 .site-footer {
   margin-top: 2rem;
   border-top: 1px solid var(--line);
@@ -459,6 +548,16 @@ main {
 }
 
 @media (max-width: 860px) {
+  .main-nav {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .split {
     grid-template-columns: 1fr;
   }

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { BrowserRouter, Link, NavLink, Route, Routes, useParams } from 'react-router-dom'
+import emailjs from '@emailjs/browser'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const heroImage = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1400&q=80'
 const aboutImage = 'https://images.unsplash.com/photo-1503428593586-e225b39bddfe?auto=format&fit=crop&w=1200&q=80'
@@ -175,6 +177,9 @@ function Breadcrumbs({ items }) {
 }
 
 function SiteLayout({ children }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const closeMobileMenu = () => setMobileMenuOpen(false)
+
   return (
     <>
       <header className="site-header">
@@ -182,6 +187,14 @@ function SiteLayout({ children }) {
           <img src={companyLogo} alt="The Event Alchemist logo" />
           <span>The Event Alchemyist</span>
         </Link>
+        <button
+          type="button"
+          className="menu-toggle"
+          aria-label="Open navigation menu"
+          onClick={() => setMobileMenuOpen(true)}
+        >
+          ☰
+        </button>
         <nav className="main-nav">
           <NavLink to="/">Home</NavLink>
           <NavLink to="/about">About Us</NavLink>
@@ -190,6 +203,40 @@ function SiteLayout({ children }) {
           <NavLink to="/contact">Contact</NavLink>
         </nav>
       </header>
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            <motion.button
+              type="button"
+              className="mobile-overlay"
+              aria-label="Close menu overlay"
+              onClick={closeMobileMenu}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            />
+            <motion.aside
+              className="mobile-drawer"
+              role="dialog"
+              aria-label="Mobile navigation"
+              initial={{ x: '100%', opacity: 0.9 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0.9 }}
+              transition={{ duration: 0.55, ease: 'easeInOut' }}
+            >
+              <button type="button" className="drawer-close" aria-label="Close navigation menu" onClick={closeMobileMenu}>×</button>
+              <nav className="mobile-nav">
+                <NavLink to="/" onClick={closeMobileMenu}>Home</NavLink>
+                <NavLink to="/about" onClick={closeMobileMenu}>About Us</NavLink>
+                <NavLink to="/offerings" onClick={closeMobileMenu}>Our Offerings</NavLink>
+                <NavLink to="/talent" onClick={closeMobileMenu}>Talent Portfolio</NavLink>
+                <NavLink to="/contact" onClick={closeMobileMenu}>Contact</NavLink>
+              </nav>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
       <main>{children}</main>
       <footer className="site-footer">
         <p>Turning Events into Golden Moments.</p>
@@ -487,19 +534,82 @@ function EventTypeDetailPage() {
 }
 
 function ContactPage() {
+  const [status, setStatus] = useState({ state: 'idle', message: '' })
+
+  useEffect(() => {
+    if (status.state === 'idle' || status.state === 'loading') return undefined
+
+    const timer = setTimeout(() => {
+      setStatus({ state: 'idle', message: '' })
+    }, 3500)
+
+    return () => clearTimeout(timer)
+  }, [status.state])
+
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    setStatus({ state: 'loading', message: '' })
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const payload = Object.fromEntries(formData.entries())
+
+    try {
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+      const adminTemplateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ADMIN
+      const autoReplyTemplateId = import.meta.env.VITE_EMAILJS_TEMPLATE_AUTOREPLY
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
+      if (!serviceId || !adminTemplateId || !autoReplyTemplateId || !publicKey) {
+        setStatus({ state: 'error', message: 'Email service is not configured. Please contact support.' })
+        return
+      }
+
+      const templateParams = {
+        name: payload.name,
+        email: payload.email,
+        organization: payload.organization || '-',
+        eventType: payload.eventType,
+        date: payload.date,
+        location: payload.location,
+        requirements: payload.requirements,
+        time: new Date().toLocaleString(),
+      }
+
+      // 1) Send inquiry to admin email (configured in EmailJS template)
+      await emailjs.send(serviceId, adminTemplateId, templateParams, { publicKey })
+
+      // 2) Send auto-reply to customer (To Email: {{user_email}})
+      await emailjs.send(serviceId, autoReplyTemplateId, templateParams, { publicKey })
+
+      setStatus({ state: 'success', message: 'Inquiry sent successfully. We will contact you shortly.' })
+      form.reset()
+    } catch {
+      setStatus({ state: 'error', message: 'Network error. Please try again.' })
+    }
+  }
+
   return (
     <SiteLayout>
       <section className="panel">
         <SectionTitle eyebrow="Contact / Inquiry" title="Let’s create something exceptional together." />
-        <form className="inquiry-form">
+        <form className="inquiry-form" onSubmit={onSubmit}>
           <label>Name*<input required type="text" name="name" /></label>
+          <label>Email*<input required type="email" name="email" /></label>
           <label>Organization<input type="text" name="organization" /></label>
           <label>Event Type*<input required type="text" name="eventType" /></label>
           <label>Date*<input required type="date" name="date" /></label>
           <label>Location*<input required type="text" name="location" /></label>
           <label>Requirements*<textarea required name="requirements" rows="5"></textarea></label>
-          <button className="btn primary" type="submit">Submit Inquiry</button>
+          <button className="btn primary" type="submit" disabled={status.state === 'loading'}>
+            {status.state === 'loading' ? 'Sending...' : 'Submit Inquiry'}
+          </button>
         </form>
+        {status.state !== 'idle' && status.state !== 'loading' && (
+          <p className={`toast ${status.state}`} role="status" aria-live="polite">
+            {status.message}
+          </p>
+        )}
         <div className="contact-info">
           <p><strong>Contact us:</strong> +91 9220766770</p>
           <p><strong>Email:</strong> Theeventalchemyist@gmail.com</p>
