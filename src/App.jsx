@@ -535,6 +535,7 @@ function EventTypeDetailPage() {
 
 function ContactPage() {
   const [status, setStatus] = useState({ state: 'idle', message: '' })
+  const today = new Date().toISOString().split('T')[0]
 
   useEffect(() => {
     if (status.state === 'idle' || status.state === 'loading') return undefined
@@ -598,7 +599,7 @@ function ContactPage() {
           <label>Email*<input required type="email" name="email" /></label>
           <label>Organization<input type="text" name="organization" /></label>
           <label>Event Type*<input required type="text" name="eventType" /></label>
-          <label>Date*<input required type="date" name="date" /></label>
+          <label>Date*<input required type="date" name="date" min={today} /></label>
           <label>Location*<input required type="text" name="location" /></label>
           <label>Requirements*<textarea required name="requirements" rows="5"></textarea></label>
           <button className="btn primary" type="submit" disabled={status.state === 'loading'}>
